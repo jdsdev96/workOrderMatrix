@@ -1,4 +1,5 @@
 import random
+import csv
 
 def generate_random_array():
     i = 0
@@ -35,12 +36,20 @@ def get_random_wo():
     return wo
 
 
-
+def commit_to_csv(array):
+    file_name = "test_wo.csv"
+    fields = ["WO#", "PD", "ERT", "Due(Days)", "Downtime"]
+    with open(file_name, 'w' , newline="") as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(fields)
+        csvwriter.writerows(array)
+    return
 
 
 def main():
     org_array = generate_random_array()
-
+    print(org_array)
+    commit_to_csv(org_array)
 
 
 main()
