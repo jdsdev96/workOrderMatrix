@@ -4,7 +4,7 @@ import csv
 def generate_random_array():
     i = 0
     main_array = []
-    for i in range(5):
+    for i in range(50):
         rand_wo = get_random_wo()
         main_array.append(rand_wo)
     return main_array
