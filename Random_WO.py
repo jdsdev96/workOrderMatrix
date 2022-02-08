@@ -35,16 +35,11 @@ def get_random_wo():
     return wo
 
 
-def sort_array(array):
-    distance_array = []
-    for i in array:
-        if array[i][1] == 1:
-            array[i][1] = 60
+
 
 
 def main():
     org_array = generate_random_array()
-    sorted_array = sort_array(org_array)
 
 
 
