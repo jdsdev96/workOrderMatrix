@@ -4,14 +4,14 @@ import csv
 def generate_random_array():
     i = 0
     main_array = []
-    for i in range(50):
+    for i in range(10):
         rand_wo = get_random_wo()
         main_array.append(rand_wo)
     return main_array
 
 
 def get_random_wo():
-    wo = [0,0,0,0,0]
+    wo = [0,0,0,0,0,0]
     wo[0] = random.randint(188000, 188999)#Work Order number
     wo[4] = random.randint(0, 300)#downtime
     if 0 <= wo[4] <= 50:
