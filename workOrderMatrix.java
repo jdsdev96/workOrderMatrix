@@ -3,9 +3,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
+
+class calcSort1 implements Runnable{
+    public volatile ArrayList<int[]> mainDataArray = new ArrayList<int[]>();
+    public calcSort1(ArrayList<int[]> _array){
+        this.mainDataArray = _array;
+    }
+    public void run(){
+        
+    }
+}
 class handleCSV{
     public ArrayList<int[]> extractData(){
         ArrayList<int[]> csvArray = new ArrayList<int[]>();
@@ -67,9 +76,17 @@ public class workOrderMatrix {
                 handleCSV readCSV = new handleCSV();
                 ArrayList<int[]> csvData = new ArrayList<int[]>();
                 csvData = readCSV.extractData();
-                for (int y = 0; y < csvData.size(); y = y + csvData.get(y).length){
+                /*for (int y = 0; y < csvData.size(); y = y + csvData.get(y).length){
                     System.out.println(Arrays.toString(csvData.get(y)));
-                }
+                }*/
+                System.out.println("CSV data extracted sucessfully.");
+                Thread t1 = new Thread(new calcSort1(csvData));
+                t1.start();
+                
+                t1.join();
+                ArrayList<int[]> secondHalf = new ArrayList<int[]>();
+                calcSort1 obj = new calcSort1(secondHalf);
+                secondHalf = obj.mainDataArray;
             }
         } catch (Exception e) {
             e.printStackTrace();
