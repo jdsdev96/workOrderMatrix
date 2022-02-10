@@ -4,7 +4,7 @@ import csv
 def generate_random_array():
     i = 0
     main_array = []
-    for i in range(500000):
+    for i in range(100):
         rand_wo = get_random_wo()
         main_array.append(rand_wo)
     return main_array
@@ -39,7 +39,7 @@ def get_random_wo():
 
 def commit_to_csv(array):
     file_name = "test_wo.csv"
-    fields = ["WO#", "PD", "ERT", "Due(Days)", "Downtime"]
+    fields = ["WO#", "PD", "ERT", "Due(Days)", "Downtime", "Risk", "Distance"]
     with open(file_name, 'w' , newline="") as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(fields)

@@ -1,16 +1,16 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.Map.Entry;
-import java.util.HashMap;
 
 
 class duplicateSearch implements Runnable{
@@ -85,6 +85,38 @@ class handleCSV{
         csvArray.remove(0);
         return csvArray;
     }
+    public void writeToCSV(ArrayList<int[]> inputList){
+        try {
+            File csvFile = new File("Result.csv");
+            if (csvFile.delete()) {
+                System.out.println("File deleted.");
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+            if (csvFile.createNewFile()) {
+                System.out.println("File created.");
+            } else {
+                System.out.println("Failed to create the file");
+            }
+            FileWriter csvWriter = new FileWriter("Result.csv");
+            csvWriter.append("WO#,PD,ERT,Due(Days),Downtime,Risk,Distance");
+            csvWriter.append("\n");
+            int[] woArray;
+            for (int i = 0; i < inputList.size(); i = i + inputList.get(i).length){
+                woArray = inputList.get(i);
+                for (int x = 0; x < woArray.length; x++){
+                    csvWriter.append(String.valueOf(woArray[x]));
+                    csvWriter.append(",");
+                }
+                csvWriter.append("\n");
+            }
+            csvWriter.flush();
+            csvWriter.close();
+            System.out.println("Written to file.");
+        } catch (IOException E) {
+            E.printStackTrace();
+        }
+    }
 }
 
 
@@ -95,11 +127,11 @@ class calcSort{
             wrkodr[wrkodr.length - 1] = calcDistance(wrkodr);
             inputArray.set(i, wrkodr);
         }
-        Collections.sort(inputArray, new Comparator<int[]>() {
+        /*Collections.sort(inputArray, new Comparator<int[]>() {
             public int compare(int[] a, int[] b){
                 return Integer.valueOf(a[a.length - 1]).compareTo(Integer.valueOf(b[b.length -1]));
             }
-        });
+        });*/
         return inputArray;
     }
     public int calcDistance(int[] input){
@@ -129,9 +161,9 @@ public class workOrderMatrix {
                 System.exit(0);
             } else {
                 System.out.println("\nExtracting Data from CSV...");
-                handleCSV readCSV = new handleCSV();
+                handleCSV readWriteCSV = new handleCSV();
                 ArrayList<int[]> csvData = new ArrayList<int[]>();
-                csvData = readCSV.extractData();
+                csvData = readWriteCSV.extractData();
                 for (int y = 0; y < csvData.get(y).length * 10; y = y + csvData.get(y).length){
                     System.out.println(Arrays.toString(csvData.get(y)));
                 }
@@ -140,7 +172,7 @@ public class workOrderMatrix {
                 t1.start();
                 calcSort calculateAndSort = new calcSort();
                 csvData = calculateAndSort.calculateSort(csvData);
-                t1.join();
+                readWriteCSV.writeToCSV(csvData);
             }
         } catch (Exception e) {
             e.printStackTrace();
