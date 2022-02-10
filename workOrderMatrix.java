@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -13,7 +15,6 @@ import java.util.HashMap;
 
 class duplicateSearch implements Runnable{
     public volatile ArrayList<int[]> mainDataArray = new ArrayList<int[]>();
-
     public duplicateSearch(ArrayList<int[]> _array){
         this.mainDataArray = _array;
     }
@@ -94,6 +95,11 @@ class calcSort{
             wrkodr[wrkodr.length - 1] = calcDistance(wrkodr);
             inputArray.set(i, wrkodr);
         }
+        Collections.sort(inputArray, new Comparator<int[]>() {
+            public int compare(int[] a, int[] b){
+                return Integer.valueOf(a[a.length - 1]).compareTo(Integer.valueOf(b[b.length -1]));
+            }
+        });
         return inputArray;
     }
     public int calcDistance(int[] input){
@@ -132,6 +138,8 @@ public class workOrderMatrix {
                 System.out.println("CSV data extracted sucessfully.");
                 Thread t1 = new Thread(new duplicateSearch(csvData));
                 t1.start();
+                calcSort calculateAndSort = new calcSort();
+                csvData = calculateAndSort.calculateSort(csvData);
                 t1.join();
             }
         } catch (Exception e) {
