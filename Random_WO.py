@@ -4,14 +4,14 @@ import csv
 def generate_random_array():
     i = 0
     main_array = []
-    for i in range(10):
+    for i in range(500000):
         rand_wo = get_random_wo()
         main_array.append(rand_wo)
     return main_array
 
 
 def get_random_wo():
-    wo = [0,0,0,0,0,0]
+    wo = [0,0,0,0,0,0,0]
     wo[0] = random.randint(188000, 188999)#Work Order number
     wo[4] = random.randint(0, 300)#downtime
     if 0 <= wo[4] <= 50:
@@ -33,6 +33,7 @@ def get_random_wo():
         wo[2] = "A"
         wo[1] = 1
     wo[3] = random.randint(-14,14)
+    wo[5] = random.randint(0,4)
     return wo
 
 
@@ -47,9 +48,11 @@ def commit_to_csv(array):
 
 
 def main():
+    print('Generating work orders...')
     org_array = generate_random_array()
-    print(org_array)
+    print('Writing to csv...')
     commit_to_csv(org_array)
+    print('done')
 
 
 main()

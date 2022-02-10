@@ -2,19 +2,44 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.Map.Entry;
+import java.util.HashMap;
 
 
-class calcSort1 implements Runnable{
+class duplicateSearch implements Runnable{
     public volatile ArrayList<int[]> mainDataArray = new ArrayList<int[]>();
-    public calcSort1(ArrayList<int[]> _array){
+
+    public duplicateSearch(ArrayList<int[]> _array){
         this.mainDataArray = _array;
     }
     public void run(){
-        
+        System.out.println("Searching for duplicates...");
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int[] woArray;
+        for (int i = 0; i < mainDataArray.size(); i = i + mainDataArray.get(i).length){
+            woArray = mainDataArray.get(i);
+            if (map.get(woArray[0]) == null){
+                map.put(woArray[0], 1);
+            } else {
+                map.put(woArray[0], map.get(woArray[0]) + 1);
+            }
+        }
+        Set<Entry<Integer, Integer>> entrySet = map.entrySet();
+        for (Entry<Integer, Integer> entry : entrySet) {               
+            if(entry.getValue() > 1){
+                System.out.println("Duplicate Element : "+ entry.getKey() +" - found "+ entry.getValue() +" times.");
+            }
+        }
+        System.out.println("Duplicate search complete.");
     }
 }
+
+
 class handleCSV{
     public ArrayList<int[]> extractData(){
         ArrayList<int[]> csvArray = new ArrayList<int[]>();
@@ -61,6 +86,31 @@ class handleCSV{
     }
 }
 
+
+class calcSort{
+    public ArrayList<int[]> calculateSort(ArrayList<int[]> inputArray){
+        for (int i = 0; i < inputArray.size(); i = i + inputArray.get(i).length){
+            int[] wrkodr = inputArray.get(i);
+            wrkodr[wrkodr.length - 1] = calcDistance(wrkodr);
+            inputArray.set(i, wrkodr);
+        }
+        return inputArray;
+    }
+    public int calcDistance(int[] input){
+        int[] testPoint = {900, -14, 0};
+        int dem0 = input[4] / input[1];
+        int dem1 = input[3];
+        int dem2 = input[5];
+        int x = (dem0 - testPoint[0]) ^ 2;
+        int y = (dem1 - testPoint[1]) ^ 2;
+        int z = (dem2 - testPoint[2]) ^ 2;
+        int underSQroot = x + y + z;
+        int distanceToPoint = (int) Math.sqrt(underSQroot);
+        return distanceToPoint;
+    }
+}
+
+
 public class workOrderMatrix {
     public static void main( String[] args) throws Exception {
         System.out.println("Work Order Matrix\n\nMake sure you have applied the desired multipliers!\n");
@@ -76,17 +126,13 @@ public class workOrderMatrix {
                 handleCSV readCSV = new handleCSV();
                 ArrayList<int[]> csvData = new ArrayList<int[]>();
                 csvData = readCSV.extractData();
-                /*for (int y = 0; y < csvData.size(); y = y + csvData.get(y).length){
+                for (int y = 0; y < csvData.get(y).length * 10; y = y + csvData.get(y).length){
                     System.out.println(Arrays.toString(csvData.get(y)));
-                }*/
+                }
                 System.out.println("CSV data extracted sucessfully.");
-                Thread t1 = new Thread(new calcSort1(csvData));
+                Thread t1 = new Thread(new duplicateSearch(csvData));
                 t1.start();
-                
                 t1.join();
-                ArrayList<int[]> secondHalf = new ArrayList<int[]>();
-                calcSort1 obj = new calcSort1(secondHalf);
-                secondHalf = obj.mainDataArray;
             }
         } catch (Exception e) {
             e.printStackTrace();
